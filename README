@@ -1,0 +1,27 @@
+USED python3, so no makefile
+
+How I Tested it:
+1. run ./nEmulator-linux386 45509 "ubuntu1804-002" 62306 63068 "ubuntu1804-004" 7848 1 0 1 on "ubuntu1804-008"
+(details see emulator.sh)
+
+2. run python3 receiver.py "ubuntu1804-008" 63068 62306 "output.txt" on "ubuntu1804-002"
+(details see receiver.sh)
+
+3. run python3 sender.py "ubuntu1804-008" 45509 7848 "input.txt" on "ubuntu1804-004"
+(details see sender.sh)
+
+
+How to Run: 
+1. run CMD "comm -23 <(seq 1024 65535 | sort) <(ss -tan | awk '{print $4}' | cut -d':' -f2 | grep "[0-9]\{1,5\}" | sort -u) | shuf | head -n 4"
+will return 4 free ports, for example:
+9991
+9992
+9993
+9994
+ 
+Use the 4 newly generated port above 
+2. On the host host1: ./nEmulator-linux386 9991 host2 9994 9993 host3 9992 1 0.2 0
+3. On the host host2: python3 receiver.py host1 9993 9994 <output File>
+4. On the host host3: python3 sender.py host1 9991 9992 <input file>
+
+Replace host1, host2, host3 with actual machine name or domain.
